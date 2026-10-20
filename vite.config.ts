@@ -11,8 +11,23 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
-      // Precache the voice clips too, so dialogues play offline
-      workbox: { globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,mp3}'] },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,webmanifest}'],
+        // Voice clips are not precached: Safari plays media only from 206 range responses,
+        // which precache can't give. A runtime cache with range support can; src/lib/audioCache.ts fills it.
+        runtimeCaching: [
+          {
+            urlPattern: /\/audio\/[0-9a-f]+\.mp3$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'audio-clips',
+              rangeRequests: true,
+              cacheableResponse: { statuses: [200] },
+              matchOptions: { ignoreVary: true },
+            },
+          },
+        ],
+      },
       manifest: {
         name: 'Real Talk - 원어민 영어회화',
         short_name: 'Real Talk',
