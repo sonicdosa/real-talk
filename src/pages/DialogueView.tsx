@@ -5,7 +5,7 @@ import { db, logActivity, touchProgress } from '../db'
 import { LEVEL_LABEL, scenarioOf } from '../data'
 import { exprKey, useDialogues, useSavedKeys } from '../hooks/useData'
 import { segment, findAll, matchText } from '../lib/highlight'
-import { speak, speechToken, stopSpeaking, ttsSupported } from '../lib/speech'
+import { canSpeak, speak, speechToken, stopSpeaking } from '../lib/speech'
 import { updateSettings, useSettings } from '../lib/settings'
 import ExpressionSheet, { toggleSaved } from '../components/ExpressionSheet'
 import { Card, PageHeader, TypeBadge, btn } from '../components/ui'
@@ -50,6 +50,7 @@ export default function DialogueView() {
   }
 
   const sc = scenarioOf(d.scenario)
+  const audible = d.lines.every((ln) => canSpeak(ln.en))
 
   const playAll = async () => {
     if (playing !== null) {
@@ -101,7 +102,7 @@ export default function DialogueView() {
         </Card>
 
         <div className="flex flex-wrap items-center gap-2">
-          {ttsSupported && (
+          {audible && (
             <button onClick={playAll} className={`${btn.primary} !rounded-full !px-4 !py-1.5 text-sm`}>
               {playing !== null ? '■ 정지' : '▶ 전체 듣기'}
             </button>
@@ -112,7 +113,7 @@ export default function DialogueView() {
           <button className={toggleCls(hideEn)} onClick={() => setHideEn(!hideEn)}>
             영어 가리기
           </button>
-          {ttsSupported && (
+          {audible && (
             <button className={toggleCls(settings.rate < 0.9)} onClick={() => updateSettings({ rate: settings.rate < 0.9 ? 0.95 : 0.7 })}>
               🐢 느리게
             </button>

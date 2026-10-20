@@ -19,6 +19,19 @@ npm run build      # dist/ 에 배포용 파일 생성
 - `src/lib/speech.ts`: 브라우저 음성 읽기 (Web Speech API, en-US)
 - `src/pages/Import.tsx`: ChatGPT/Gemini용 프롬프트 생성과 JSON 가져오기
 
+## 원어민 음성 (edge-tts)
+
+기본 대화는 `public/audio/*.mp3`에 미리 만든 AI 음성으로 재생됩니다. 클립이 없는 문장(직접 추가한 대화 등)은 기기 음성으로 읽어요.
+대사나 표현을 고쳤다면 음성을 다시 만드세요. 이미 있는 클립은 건너뛰고, 안 쓰는 클립은 지웁니다.
+
+```bash
+node scripts/export-tts.mjs
+python scripts/gen_audio.py
+```
+
+- 목소리 배정과 성별 구분은 `scripts/export-tts.mjs`, 문자 줄임말을 읽는 방식은 `src/lib/clips.ts`의 `TEXTING_SAY`에서 바꿉니다.
+- `gen_audio.py`를 실행하려면 `pip install edge-tts`가 필요하고, `--force`를 붙이면 전부 다시 만듭니다.
+
 ## 대화 추가 규칙
 
 표현의 `match`는 대사에 있는 문자열과 **정확히 같아야** 밑줄 강조와 퀴즈에 쓰입니다.

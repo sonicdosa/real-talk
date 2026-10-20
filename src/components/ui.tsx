@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { useNavigate } from 'react-router'
 import type { ExpressionType } from '../types'
 import { TYPE_LABEL } from '../data'
-import { speak, ttsSupported } from '../lib/speech'
+import { canSpeak, speak } from '../lib/speech'
 
 export function PageHeader({ title, back, right }: { title: ReactNode; back?: boolean; right?: ReactNode }) {
   const nav = useNavigate()
@@ -36,7 +36,7 @@ export function SpeakButton({
   className?: string
   label?: string
 }) {
-  if (!ttsSupported) return null
+  if (!canSpeak(text)) return null
   return (
     <button
       onClick={(e) => {

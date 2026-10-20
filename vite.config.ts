@@ -11,6 +11,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
+      // Precache the voice clips too, so dialogues play offline
+      workbox: { globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,mp3}'] },
       manifest: {
         name: 'Real Talk - 원어민 영어회화',
         short_name: 'Real Talk',

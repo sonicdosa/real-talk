@@ -71,29 +71,33 @@ export default function Settings() {
       <div className="space-y-4 px-4">
         <Card className="space-y-4">
           <h2 className="font-bold">🔊 음성 (미국식)</h2>
-          {ttsSupported ? (
-            <>
-              <label className="block">
-                <span className="flex justify-between text-sm text-stone-600 dark:text-stone-300">
-                  말하기 속도 <b>{s.rate.toFixed(2)}x</b>
-                </span>
-                <input
-                  type="range"
-                  min={0.5}
-                  max={1.3}
-                  step={0.05}
-                  value={s.rate}
-                  onChange={(e) => updateSettings({ rate: Number(e.target.value) })}
-                  className="mt-2 w-full accent-indigo-600"
-                />
-              </label>
-              {voicesNote(voices.length)}
-              {voiceSelect('voiceA', '상대방 목소리 (A)', 'A')}
-              {voiceSelect('voiceB', '두 번째 목소리 (B)', 'B')}
-            </>
-          ) : (
-            <p className="text-sm text-stone-500">이 브라우저는 음성 읽기를 지원하지 않아요. Chrome이나 Safari를 사용해 주세요.</p>
-          )}
+          <p className="text-sm text-stone-600 dark:text-stone-300">기본 대화 30개는 AI 원어민 음성으로 녹음돼 있어요.</p>
+          <label className="block">
+            <span className="flex justify-between text-sm text-stone-600 dark:text-stone-300">
+              말하기 속도 <b>{s.rate.toFixed(2)}x</b>
+            </span>
+            <input
+              type="range"
+              min={0.5}
+              max={1.3}
+              step={0.05}
+              value={s.rate}
+              onChange={(e) => updateSettings({ rate: Number(e.target.value) })}
+              className="mt-2 w-full accent-indigo-600"
+            />
+          </label>
+          <div className="space-y-3 border-t border-stone-200 pt-3 dark:border-stone-800">
+            <p className="text-sm font-semibold">기기 음성 (직접 추가한 대화용)</p>
+            {ttsSupported ? (
+              <>
+                {voicesNote(voices.length)}
+                {voiceSelect('voiceA', '상대방 목소리 (A)', 'A')}
+                {voiceSelect('voiceB', '두 번째 목소리 (B)', 'B')}
+              </>
+            ) : (
+              <p className="text-sm text-stone-500">이 브라우저는 기기 음성 읽기를 지원하지 않아요.</p>
+            )}
+          </div>
         </Card>
 
         <Card className="space-y-3">
